@@ -1,0 +1,69 @@
+.wrapper {
+  position: relative;
+  width: 430px;
+}
+
+.dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 48px;
+  padding: 0 15px;
+  background: var(--container-1);
+  border: 1px solid var(--border-neutral);
+  border-radius: var(--radius-s);
+  color: var(--secondary-text);
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevronBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 48px;
+  background: var(--neutral-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--container-1);
+  border: 1px solid var(--border-neutral);
+  border-radius: var(--radius-s);
+  list-style: none;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--text);
+}
+
+.option:hover {
+  background: var(--bg);
+}
+
+.selected {
+  font-weight: 500;
+  background: var(--bg);
+}

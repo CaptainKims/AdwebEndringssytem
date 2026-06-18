@@ -1,0 +1,165 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.metaGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 14px;
+}
+
+.metaItem {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.metaLabel {
+  color: var(--secondary-text);
+  font-weight: 300;
+}
+
+.metaValue {
+  font-weight: 600;
+}
+
+.campaignName {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detailRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.detailLabel {
+  color: var(--secondary-text);
+  font-weight: 300;
+}
+
+.detailValue {
+  font-weight: 600;
+}
+
+.tableSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.tableHeader,
+.tableRow,
+.tableSum {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr 1fr 1fr 0.5fr 0.9fr 1fr;
+  gap: 8px;
+  align-items: center;
+  min-width: 720px;
+}
+
+.tableHeader {
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--secondary-text);
+  font-weight: 300;
+}
+
+.tableRow {
+  padding: 12px;
+  background: var(--container-1);
+  border: 1px solid var(--border-neutral);
+  border-radius: var(--radius-s);
+  font-size: 14px;
+}
+
+.tableSum {
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lineName {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lineSub {
+  font-size: 11px;
+  color: var(--secondary-text);
+  font-weight: 300;
+}
+
+.clarificationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: var(--container-1);
+  border: 1px solid var(--border-neutral);
+  border-radius: var(--radius-s);
+}
+
+.clarificationTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.clarificationMeta {
+  font-size: 12px;
+  color: var(--secondary-text);
+}
+
+.clarificationMessage {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.clarifyBtn {
+  height: 32px;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: var(--neutral-surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.confirmBtn {
+  height: 32px;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: var(--action-surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}

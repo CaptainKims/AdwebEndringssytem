@@ -1,0 +1,56 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+}
+
+.main {
+  flex: 1;
+  padding: var(--spacing-l);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.tasksSection {
+  background: var(--container-1);
+  border: 1px solid var(--border-neutral);
+  border-radius: var(--radius-s);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sectionHeading {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.04;
+}
+
+.count {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--secondary-text);
+  line-height: 1.04;
+  white-space: nowrap;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
