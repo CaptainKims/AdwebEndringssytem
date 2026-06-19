@@ -29,13 +29,20 @@
 }
 
 .titleBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   text-align: left;
   font-size: 14px;
   color: var(--text);
+  min-width: 0;
+  flex: 1;
+}
+
+.titleText {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 425px;
 }
 
 .advertiser {

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { PlannerFilter } from './components/PlannerFilter';
+import { ProductFilter } from './components/ProductFilter';
 import { LayoutToggle, type LayoutMode } from './components/LayoutToggle';
 import { TaskCard } from './components/TaskCard';
 import { RecentChanges } from './components/RecentChanges';
@@ -9,8 +10,11 @@ import { RejectModal } from './components/RejectModal';
 import { ClarificationModal } from './components/ClarificationModal';
 import { EmptyState } from './components/EmptyState';
 import { INITIAL_REQUESTS, RECENT_ITEMS } from './data/mockData';
+import { showPlannerFilter } from './constants/productTypes';
+import type { ProductFilterValue } from './types';
 import { createRecentChangeFromRequest, createRecentRejectedFromRequest, formatTimestamp } from './utils/recentItems';
 import { persistLayoutMode, readLayoutMode } from './utils/layoutMode';
+import { formatProductBreakdown, matchesFilters } from './utils/filters';
 import styles from './App.module.css';
 
 export default function App() {
@@ -18,6 +22,7 @@ export default function App() {
   const [expandedId, setExpandedId] = useState<string | null>('1');
   const [recentItems, setRecentItems] = useState(RECENT_ITEMS);
   const [recentExpandedId, setRecentExpandedId] = useState<string | null>(null);
+  const [productFilter, setProductFilter] = useState<ProductFilterValue>('all');
   const [plannerFilter, setPlannerFilter] = useState('Kim Skjold');
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [clarifyingCampaignId, setClarifyingCampaignId] = useState<string | null>(null);
@@ -28,10 +33,43 @@ export default function App() {
     persistLayoutMode(mode);
   }
 
-  const filtered = useMemo(() => {
-    if (plannerFilter === 'Alle planleggere') return requests;
-    return requests.filter((r) => r.planner === plannerFilter);
-  }, [requests, plannerFilter]);
+  function handleProductFilterChange(value: ProductFilterValue) {
+    setProductFilter(value);
+    if (!showPlannerFilter(value)) {
+      setPlannerFilter('Alle planleggere');
+    }
+  }
+
+  const plannerFilterVisible = showPlannerFilter(productFilter);
+  const effectivePlannerFilter = plannerFilterVisible
+    ? plannerFilter
+    : 'Alle planleggere';
+
+  const filteredRequests = useMemo(
+    () =>
+      requests.filter((request) =>
+        matchesFilters(request, productFilter, effectivePlannerFilter),
+      ),
+    [requests, productFilter, effectivePlannerFilter],
+  );
+
+  const filteredRecentItems = useMemo(
+    () =>
+      recentItems.filter((item) =>
+        matchesFilters(item, productFilter, effectivePlannerFilter),
+      ),
+    [recentItems, productFilter, effectivePlannerFilter],
+  );
+
+  const taskBreakdown = useMemo(
+    () => formatProductBreakdown(filteredRequests),
+    [filteredRequests],
+  );
+
+  const tasksHeading =
+    plannerFilterVisible && effectivePlannerFilter !== 'Alle planleggere'
+      ? 'Mine oppgaver'
+      : 'Alle oppgaver';
 
   function completeApprovedRequest(id: string) {
     const request = requests.find((r) => r.id === id);
@@ -105,7 +143,15 @@ export default function App() {
         <Sidebar />
         <main className={styles.main}>
           <div className={styles.toolbar}>
-            <PlannerFilter value={plannerFilter} onChange={setPlannerFilter} />
+            <div className={styles.filters}>
+              <ProductFilter value={productFilter} onChange={handleProductFilterChange} />
+              {plannerFilterVisible && (
+                <PlannerFilter value={plannerFilter} onChange={setPlannerFilter} />
+              )}
+              {productFilter === 'all' && plannerFilterVisible && (
+                <span className={styles.filterHint}>Planlegger gjelder kun Video Ad</span>
+              )}
+            </div>
             <LayoutToggle value={layoutMode} onChange={handleLayoutChange} />
           </div>
 
@@ -115,43 +161,49 @@ export default function App() {
             }
           >
             <section className={styles.tasksSection}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionHeading}>Mine oppgaver</h2>
-              <span className={styles.count}>
-                {filtered.length}{' '}
-                {filtered.length === 1 ? 'oppgave gjenstår' : 'oppgaver gjenstår'}
-              </span>
-            </div>
-            {filtered.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className={styles.taskList}>
-                {filtered.map((request) => (
-                  <TaskCard
-                    key={request.id}
-                    request={request}
-                    expanded={expandedId === request.id}
-                    onToggle={() =>
-                      setExpandedId((id) => (id === request.id ? null : request.id))
-                    }
-                    onApprove={() => handleApprove(request.id)}
-                    onReject={() => setRejectingId(request.id)}
-                  />
-                ))}
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionHeading}>{tasksHeading}</h2>
+                <span className={styles.count}>
+                  {filteredRequests.length}{' '}
+                  {filteredRequests.length === 1 ? 'oppgave gjenstår' : 'oppgaver gjenstår'}
+                  {taskBreakdown && (
+                    <>
+                      <span className={styles.countDivider}>·</span>
+                      {taskBreakdown}
+                    </>
+                  )}
+                </span>
               </div>
-            )}
-          </section>
+              {filteredRequests.length === 0 ? (
+                <EmptyState />
+              ) : (
+                <div className={styles.taskList}>
+                  {filteredRequests.map((request) => (
+                    <TaskCard
+                      key={request.id}
+                      request={request}
+                      expanded={expandedId === request.id}
+                      onToggle={() =>
+                        setExpandedId((id) => (id === request.id ? null : request.id))
+                      }
+                      onApprove={() => handleApprove(request.id)}
+                      onReject={() => setRejectingId(request.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </section>
 
-          <RecentChanges
-            items={recentItems}
-            count={recentItems.length}
-            expandedId={recentExpandedId}
-            onToggle={(id) =>
-              setRecentExpandedId((current) => (current === id ? null : id))
-            }
-            onAcknowledge={handleAcknowledgeRecentItem}
-            onRequestClarification={setClarifyingCampaignId}
-          />
+            <RecentChanges
+              items={filteredRecentItems}
+              count={filteredRecentItems.length}
+              expandedId={recentExpandedId}
+              onToggle={(id) =>
+                setRecentExpandedId((current) => (current === id ? null : id))
+              }
+              onAcknowledge={handleAcknowledgeRecentItem}
+              onRequestClarification={setClarifyingCampaignId}
+            />
           </div>
         </main>
       </div>

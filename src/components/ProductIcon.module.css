@@ -1,0 +1,13 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text);
+}
+
+.icon {
+  display: block;
+  height: 16px;
+  width: auto;
+}

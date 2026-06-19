@@ -3,8 +3,10 @@ import type { ItemBadgeKind } from './TypeBadge';
 import { CampaignSummaryView } from './CampaignSummaryView';
 import { ChangeItemLine } from './ChangeItemLine';
 import { EmptyState } from './EmptyState';
+import { ProductIcon } from './ProductIcon';
 import { TypeBadge } from './TypeBadge';
 import { ChevronDown } from './icons';
+import { ADWEB_OWNER } from '../constants/productTypes';
 import styles from './RecentChanges.module.css';
 
 function getBadgeKind(item: RecentItem): ItemBadgeKind {
@@ -29,11 +31,16 @@ function RecentItemCard({
   onAcknowledge,
   onRequestClarification,
 }: RecentItemCardProps) {
+  const isVideoWithPlanner = item.productType === 'video-ad' && item.planner;
+  const avatarInitials = isVideoWithPlanner ? item.initials : ADWEB_OWNER.initials;
+  const avatarColor = isVideoWithPlanner ? item.avatarColor : ADWEB_OWNER.avatarColor;
+
   return (
     <div className={`${styles.card} ${expanded ? styles.expanded : ''}`}>
       <div className={styles.header}>
         <button className={styles.titleBtn} onClick={onToggle}>
           <TypeBadge kind={getBadgeKind(item)} />
+          <ProductIcon productType={item.productType} />
           <span className={styles.titleText}>
             <span className={styles.advertiser}>{item.advertiser}</span>
             <span className={styles.separator}> | </span>
@@ -45,9 +52,9 @@ function RecentItemCard({
         <div className={styles.meta}>
           <div
             className={styles.avatar}
-            style={{ background: item.avatarColor }}
+            style={{ background: avatarColor }}
           >
-            {item.initials}
+            {avatarInitials}
           </div>
           <button
             className={`${styles.chevronBtn} ${expanded ? styles.chevronUp : ''}`}

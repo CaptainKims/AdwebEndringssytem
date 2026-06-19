@@ -1,3 +1,7 @@
+export type ProductType = 'video-ad' | 'display-sponsorship' | 'pause-ad';
+
+export type ProductFilterValue = 'all' | ProductType;
+
 export interface ChangeItem {
   id: string;
   text: string;
@@ -12,8 +16,9 @@ export interface ChangeRequest {
   advertiser: string;
   orderNumber: string;
   campaign: string;
-  planner: string;
-  plannerInitials: string;
+  productType: ProductType;
+  planner?: string;
+  plannerInitials?: string;
   requesterName: string;
   requesterContactHref: string;
   changes: ChangeItem[];
@@ -51,6 +56,8 @@ interface RecentItemBase {
   advertiser: string;
   orderNumber: string;
   campaign: string;
+  productType: ProductType;
+  planner?: string;
   responsible: string;
   initials: string;
   avatarColor: string;

@@ -1,3 +1,4 @@
+import { ADWEB_OWNER } from '../constants/productTypes';
 import type { ChangeRequest, RecentChangeItem, RecentRejectedItem } from '../types';
 
 export function formatTimestamp(date: Date): string {
@@ -14,13 +15,18 @@ export function formatTimestamp(date: Date): string {
 }
 
 function createBaseFromRequest(request: ChangeRequest, processedAt: Date) {
+  const isVideoWithPlanner =
+    request.productType === 'video-ad' && request.planner;
+
   return {
     advertiser: request.advertiser,
     orderNumber: request.orderNumber,
     campaign: request.campaign,
-    responsible: request.planner,
-    initials: request.plannerInitials,
-    avatarColor: '#badaf8',
+    productType: request.productType,
+    planner: isVideoWithPlanner ? request.planner : undefined,
+    responsible: isVideoWithPlanner ? request.planner! : ADWEB_OWNER.responsible,
+    initials: isVideoWithPlanner ? request.plannerInitials! : ADWEB_OWNER.initials,
+    avatarColor: isVideoWithPlanner ? '#badaf8' : ADWEB_OWNER.avatarColor,
     timestamp: formatTimestamp(processedAt),
     changes: request.changes.map((change) => ({ ...change })),
   };
