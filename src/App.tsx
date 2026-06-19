@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { PlannerFilter } from './components/PlannerFilter';
+import { LayoutToggle, type LayoutMode } from './components/LayoutToggle';
 import { TaskCard } from './components/TaskCard';
 import { RecentChanges } from './components/RecentChanges';
 import { RejectModal } from './components/RejectModal';
@@ -9,6 +10,7 @@ import { ClarificationModal } from './components/ClarificationModal';
 import { EmptyState } from './components/EmptyState';
 import { INITIAL_REQUESTS, RECENT_ITEMS } from './data/mockData';
 import { createRecentChangeFromRequest, createRecentRejectedFromRequest, formatTimestamp } from './utils/recentItems';
+import { persistLayoutMode, readLayoutMode } from './utils/layoutMode';
 import styles from './App.module.css';
 
 export default function App() {
@@ -19,6 +21,12 @@ export default function App() {
   const [plannerFilter, setPlannerFilter] = useState('Kim Skjold');
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [clarifyingCampaignId, setClarifyingCampaignId] = useState<string | null>(null);
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>(readLayoutMode);
+
+  function handleLayoutChange(mode: LayoutMode) {
+    setLayoutMode(mode);
+    persistLayoutMode(mode);
+  }
 
   const filtered = useMemo(() => {
     if (plannerFilter === 'Alle planleggere') return requests;
@@ -96,9 +104,17 @@ export default function App() {
       <div className={styles.body}>
         <Sidebar />
         <main className={styles.main}>
-          <PlannerFilter value={plannerFilter} onChange={setPlannerFilter} />
+          <div className={styles.toolbar}>
+            <PlannerFilter value={plannerFilter} onChange={setPlannerFilter} />
+            <LayoutToggle value={layoutMode} onChange={handleLayoutChange} />
+          </div>
 
-          <section className={styles.tasksSection}>
+          <div
+            className={
+              layoutMode === 'twoColumn' ? styles.contentTwoColumn : styles.contentStacked
+            }
+          >
+            <section className={styles.tasksSection}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionHeading}>Mine oppgaver</h2>
               <span className={styles.count}>
@@ -136,6 +152,7 @@ export default function App() {
             onAcknowledge={handleAcknowledgeRecentItem}
             onRequestClarification={setClarifyingCampaignId}
           />
+          </div>
         </main>
       </div>
 

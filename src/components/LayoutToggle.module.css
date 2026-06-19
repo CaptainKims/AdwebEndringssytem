@@ -1,0 +1,51 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--neutral-surface);
+  border: 1px solid var(--border-neutral);
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.track:focus-visible {
+  outline: 2px solid var(--action-surface);
+  outline-offset: 2px;
+}
+
+.trackOn {
+  background: var(--action-surface);
+  border-color: var(--action-surface);
+}
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--container-1);
+  box-shadow: 0 1px 2px rgba(16, 1, 24, 0.12);
+  transition: transform 0.2s ease;
+}
+
+.trackOn .knob {
+  transform: translateX(20px);
+}
